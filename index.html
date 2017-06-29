@@ -1,0 +1,217 @@
+
+<html>
+<head>
+  <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Algolia Keele Trial search</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.0.0-RC.1/dist/instantsearch.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.0.0-RC.1/dist/instantsearch.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.0.0-RC.1/dist/instantsearch-theme-algolia.min.css">
+  
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+  <style>
+  /* throw some basic CSS in */
+  body {
+    font-family: sans-serif;
+  }
+  em {
+    font-weight: bold;
+    color: #FFA500;
+  }
+  .logo {
+    margin-bottom: 10px;
+  }
+  /* and for bootstrap nav */
+  body { padding-top: 70px; }
+    @media screen and (max-width: 768px) {
+        body { padding-top: 70px; }
+}
+  .course-level {
+  border: 1px solid #e0e0e0;
+  padding: 3px 5px;
+  text-align: center;
+  text-transform: uppercase;
+  }
+  .course-result{
+    margin-bottom: 4px;
+  }
+  </style>
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+
+          <a class="navbar-brand" href="#">Trialling Algolia as course search...</a>
+        </div>
+
+      </div>
+    </nav>
+
+<div class="container">
+
+  <img class="logo" src="https://www.keele.ac.uk/media/keeleuniversity/styleassets/images/logo.png" alt="Keele University" title="Keele University">
+  <br />
+  <button><a href="./index.html">Clear url parameters (full reset)</a></button>
+  <p>Proof of concept (ignore styling!)</p>
+  <p>Switch to yarn and package control etc for final build</p>
+  <p>Using RC1 instantsearchJS v2</p>
+
+
+<div id="current-refined-values">
+  <!-- CurrentRefinedValues widget will appear here -->
+</div>
+<div id="clear-all">
+  <!-- ClearAll widget will appear here -->
+</div>
+
+
+
+<div id="search-box">
+  <!-- SearchBox widget will appear here -->
+</div>
+
+<div id="stats-container">
+  <!-- Metadata Stats --> 
+</div>
+
+<div id="refinement-list">
+  <!-- RefinementList widget will appear here -->
+</div>
+
+<!--  TOO MANY DURATION options so taking this out-->
+<!-- <div id="current-refined-values-duration"> -->
+  <!-- RefinementLIst 2 for duration UG -->
+<!-- </div> -->
+<div id="hits">
+  <!-- Hits widget will appear here -->
+</div>
+
+<!-- Additional container to stop 100% height demo css wrecking it for now -->
+<div style="height: 20px;">
+<div id="pagination">
+  <!-- Pagination widget will appear here -->
+</div>
+</div>
+
+
+
+</div> <!-- .container -->
+
+
+
+
+<!-- configure the app -->
+<script>
+const search = instantsearch({
+  appId: 'HT7VYJG3KU',
+  apiKey: 'd37bbf3291b226676c9f3f1937e865d3',
+  indexName: 'dev_EVENTS',
+  urlSync: true
+});
+
+  // initialize currentRefinedValues
+  search.addWidget(
+    instantsearch.widgets.currentRefinedValues({
+      container: '#current-refined-values',
+      // This widget can also contain a clear all link to remove all filters,
+      // we disable it in this example since we use `clearAll` widget on its own.
+      clearAll: false
+    })
+  );
+
+
+  // initialize clearAll
+  search.addWidget(
+    instantsearch.widgets.clearAll({
+      container: '#clear-all',
+      templates: {
+        link: 'Reset facets'
+      },
+      autoHideContainer: true
+    })
+  );
+
+  // initialize pagination
+  search.addWidget(
+    instantsearch.widgets.pagination({
+      container: '#pagination',
+      maxPages: 20,
+      // default is to scroll to 'body', here we disable this behavior
+      scrollTo: false
+    })
+  );
+
+
+  // initialize RefinementList
+  search.addWidget(
+    instantsearch.widgets.refinementList({
+      container: '#refinement-list',
+      attributeName: 'eventTitle'
+    })
+  );
+
+// TOO MANY DURATION options so taking this out
+  // initialize RefinementList
+  // search.addWidget(
+  //  instantsearch.widgets.refinementList({
+  //    container: '#current-refined-values-duration',
+  //    attributeName: 'duration'
+  //  })
+  // );
+
+
+
+  // initialize SearchBox
+  search.addWidget(
+    instantsearch.widgets.searchBox({
+      container: '#search-box',
+      placeholder: 'Search for a course'
+    })
+  );
+
+// initialize hits widget
+// search.addWidget(
+//     instantsearch.widgets.hits({
+//       container: '#hits'
+//     })
+//   );
+
+// initialize hits widget with mustache type template
+search.addWidget(
+    instantsearch.widgets.hits({
+      container: '#hits',
+      templates: {
+        empty: 'No results',
+        item: '<div class="course-result"><!-- Hit {{ objectID }}: --><a href="{{ urlPath }}">{{{ _highlightResult.eventTitle.value }}}</a> <span class="course-level">{{eventTitle}}</span></div>'
+      }
+    })
+  );
+
+// add a stats counter
+search.addWidget(
+  instantsearch.widgets.stats({
+    container: '#stats-container'
+  })
+);
+
+
+
+
+search.start();
+</script>
+
+
+</body>
+</html>
