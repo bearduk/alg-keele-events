@@ -194,7 +194,7 @@ search.addWidget(
       container: '#hits',
       templates: {
         empty: 'No results',
-        item: '<div class="course-result"><!-- Hit {{ objectID }}: --><a href="{{ urlPath }}">{{{ _highlightResult.eventTitle.value }}}</a> <span class="course-level">{{startDate for testing only}}</span><p>{{{_highlightResult.abstract.value}}}</p></div><hr />'
+        item: '<div class="course-result"><!-- Hit {{ objectID }}: --><a href="{{ urlPath }}">{{{ _highlightResult.eventTitle.value }}}</a> <span class="course-level">{{startDate for testing only}}</span><p>{{{_highlightResult.abstract.value}}}</p></div>unixstartdate: {{unixStartDate}}<hr />'
       }
     })
   );
