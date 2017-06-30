@@ -10,6 +10,8 @@
   
   <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.0.0-RC.1/dist/instantsearch.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.0.0-RC.1/dist/instantsearch-theme-algolia.min.css">
   
 <!-- Latest compiled and minified CSS -->
@@ -59,7 +61,7 @@
       </div>
     </nav>
 
-<div class="container">
+<div class="container" id="container">
 
   <img class="logo" src="https://www.keele.ac.uk/media/keeleuniversity/styleassets/images/logo.png" alt="Keele University" title="Keele University">
   <br />
@@ -69,6 +71,8 @@
   <p>Using RC1 instantsearchJS v2</p>
 
 
+{{title}}
+
 <div id="current-refined-values">
   <!-- CurrentRefinedValues widget will appear here -->
 </div>
@@ -76,12 +80,14 @@
   <!-- ClearAll widget will appear here -->
 </div>
 
-
+<!-- <div id="app"></div> -->
 
 <div id="search-box">
   <!-- SearchBox widget will appear here -->
 </div>
-
+<div id="date">
+  <!-- refinementList widget -->
+</div>
 <div id="stats-container">
   <!-- Metadata Stats --> 
 </div>
@@ -114,11 +120,24 @@
 
 <!-- configure the app -->
 <script>
+
+
+
+
+var vm = new Vue({
+  el: '#container',
+  data: {
+    title: "Testing VueJS"
+  }
+});
+
+
 const search = instantsearch({
   appId: 'HT7VYJG3KU',
   apiKey: 'd37bbf3291b226676c9f3f1937e865d3',
   indexName: 'dev_EVENTS',
-  urlSync: true
+  urlSync: true,
+  filters: 'unixStartDate: 1395446400 TO 1453420800'  
 });
 
   // initialize currentRefinedValues
@@ -131,6 +150,23 @@ const search = instantsearch({
     })
   );
 
+
+  // initialize the refinementlist
+//   search.addWidget(
+//   instantsearch.widgets.numericRefinementList({
+//     container: '#date',
+//     attributeName: 'unixStartDate',
+//     options: [
+//       {name: 'All'},
+//       {end: 500, name: 'less than 500'},
+//       {start: 500, end: 2000, name: 'between 500 and 2000'},
+//       {start: 2000, name: 'more than 2000'}
+//     ] /*,
+//     templates: {
+//       header: 'Popularity'
+//     } */
+//   })
+// );
 
   // initialize clearAll
   search.addWidget(
@@ -205,8 +241,6 @@ search.addWidget(
     container: '#stats-container'
   })
 );
-
-
 
 
 search.start();
